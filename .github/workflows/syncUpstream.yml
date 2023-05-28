@@ -1,0 +1,22 @@
+name: Sync with Upstream
+on:
+  repository_dispatch:
+    types: [upstream_push]
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '30 5,17 * * *'
+  workflow_dispatch:
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Sync with Upstream
+      run: |
+        git fetch upstream
+        git checkout master
+        git merge upstream/master
+        git push origin master
